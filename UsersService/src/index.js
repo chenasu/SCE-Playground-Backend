@@ -7,17 +7,17 @@ const app = express();
 const port = 3002;
 
 const client = new Client({
-  user: 'postgres',
   host: 'localhost',
-  database: 'users',
+  user: 'postgres',
   password: "DBMSPost",
+  database: 'users',
   port: 5432,
 });
 
 client
   .connect()
   .then(() => console.log("Connected to PostgreSQL"))
-  .catch((err) => console.error("Connection error", err.stack));
+  .catch((err) => console.error("Connection error ", err.stack));
 
 app.use(cors());
 app.use(express.json());
@@ -63,5 +63,5 @@ app.post("/login", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`UserServuce is running at http://localhost:${port}`);
 });

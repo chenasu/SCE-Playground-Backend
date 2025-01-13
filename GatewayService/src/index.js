@@ -5,6 +5,8 @@ import cors from "cors";
 const app = express();
 const PORT = 3000;
 const AUTH_SERVICE_URL = "http://localhost:3002";
+// const PRODUCTS_SERVICE_URL = "http://localhost:3002";
+// const LEADS_SERVICE_URL = "http://localhost:3002";
 
 app.use(express.json());
 app.use(cors());
@@ -21,6 +23,7 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+  console.log('got login request')
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/login`, req.body);
     console.log(response.status)
