@@ -10,7 +10,7 @@ const AUTH_SERVICE_URL = "http://localhost:3002";
 
 app.use(express.json());
 app.use(cors());
-
+ 
 app.post("/signup", async (req, res) => {
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/signup`, req.body);
