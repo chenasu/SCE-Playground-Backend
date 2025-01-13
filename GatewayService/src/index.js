@@ -34,6 +34,18 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// app.post("/example", async (req, res) => {
+//   console.log('got login request')
+//   try {
+//     const response = await axios.post(`${EXAMPLE_SERVICE_URL}/example`, req.body);
+//     console.log(response.status)
+//     res.status(response.status).json(response.data);
+//   } catch (error) {
+//     console.error("Error during login:", error);
+//     res.status(500).json({ message: "Error during example process" });
+//   }
+// });
+
 app.listen(PORT, () => {
   console.log(`API Gateway is running on http://localhost:${PORT}`);
 });
