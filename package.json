@@ -13,7 +13,10 @@
   "author": "Chen Asulin 3",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",
