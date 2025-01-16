@@ -25,7 +25,7 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, fullname, password, email } = req.body;
   try {
     const result = await client.query(
       "SELECT * FROM users WHERE username = $1",
@@ -36,8 +36,8 @@ app.post("/signup", async (req, res) => {
     }
 
     await client.query(
-      "INSERT INTO users (username, password) VALUES ($1, $2)",
-      [username, password]
+      "INSERT INTO users (username, fullname, password, email) VALUES ($1, $2, $3, $4)",
+      [username, fullname, password, email]
     );
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
@@ -67,5 +67,5 @@ app.post("/login", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`UserServuce is running at http://localhost:${port}`);
+  console.log(`UserService is running at http://localhost:${port}`);
 });
