@@ -3,13 +3,13 @@ const { Client } = pkg;
 
 // Database connection configuration
 const dbConfig = {
-    host: 'dpg-cu2lctqj1k6c73cnm9rg-a.frankfurt-postgres.render.com',
-    user: 'noa',
-    password: "X67dCEkY8YQvqBiwNr2zKN4J5ETxv8GQ",
-    database: 'users_oo4c',
-    port: 5432,
-    ssl: true
-  };
+  host: 'dpg-cu2lctqj1k6c73cnm9rg-a.frankfurt-postgres.render.com',
+  user: 'noa',
+  password: "X67dCEkY8YQvqBiwNr2zKN4J5ETxv8GQ",
+  database: 'users_oo4c',
+  port: 5432,
+  ssl: true
+};
 
 const createTableAndInsertUser = async () => {
   // SQL statements
