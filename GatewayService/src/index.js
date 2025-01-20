@@ -1,6 +1,8 @@
 import express from "express";
 import axios from "axios";
 import cors from "cors";
+import cookieParser from "cookie-parser"; 
+
 
 const app = express();
 const PORT = 3000;
@@ -9,7 +11,11 @@ const AUTH_SERVICE_URL = "http://localhost:3002";
 // const LEADS_SERVICE_URL = "http://localhost:3002";
 
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+  origin: "http://localhost:5173", // הדומיין של ה-Frontend
+  credentials: true, // מאפשר שליחת קוקיז
+}));
  
 app.post("/signup", async (req, res) => {
   try {
@@ -27,6 +33,18 @@ app.post("/login", async (req, res) => {
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/login`, req.body);
     console.log(response.status)
+     // קבלת ה-JWT מ-Auth Service
+     const { token } = response.data;
+     if (!token) {
+      return res.status(401).json({ message: "Authentication failed" });
+    }
+     // שמירת ה-JWT ב-Cookie
+     res.cookie("authToken", token, {
+       httpOnly: true,
+       secure: false, // שימי לב: ל-Production יש לשנות ל-true
+       sameSite: "strict",
+       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 ימים
+     });
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error("Error during login:", error);
