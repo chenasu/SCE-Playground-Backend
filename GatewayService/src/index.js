@@ -13,8 +13,8 @@ const AUTH_SERVICE_URL = "http://localhost:3002";
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:5173", // הדומיין של ה-Frontend
-  credentials: true, // מאפשר שליחת קוקיז
+  origin: "http://localhost:5173", 
+  credentials: true, 
 }));
  
 app.post("/signup", async (req, res) => {
@@ -38,12 +38,12 @@ app.post("/login", async (req, res) => {
      if (!token) {
       return res.status(401).json({ message: "Authentication failed" });
     }
-     // שמירת ה-JWT ב-Cookie
+     
      res.cookie("authToken", token, {
        httpOnly: true,
-       secure: false, // שימי לב: ל-Production יש לשנות ל-true
+       secure: false,
        sameSite: "strict",
-       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 ימים
+       maxAge: 30 * 24 * 60 * 60 * 1000, 
      });
     res.status(response.status).json(response.data);
   } catch (error) {

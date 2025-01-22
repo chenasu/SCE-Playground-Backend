@@ -74,19 +74,19 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Middleware לאימות JWT
+
 const authenticateToken = (req, res, next) => {
-  const token = req.cookies?.authToken; // קריאת ה-JWT מ-Cookie
+  const token = req.cookies?.authToken; 
   if (!token) return res.status(401).json({ message: "Unauthorized" });
 
   jwt.verify(token, SECRET_KEY, (err, user) => {
     if (err) return res.status(403).json({ message: "Invalid token" });
-    req.user = user; // שמירת פרטי המשתמש לבקשה
+    req.user = user;
     next();
   });
 };
 
-// Protected route לדוגמה
+
 app.get("/protected", authenticateToken, (req, res) => {
   res.json({ message: "This is a protected route", user: req.user });
 });
