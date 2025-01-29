@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install Dependencies for Service
+        working-directory: ./UsersService
+        run: npm install
+      - name: Run Service Tests
+        working-directory: ./UsersService
+        run: npm test
+
+  gateway:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install Dependencies for Gateway
+        working-directory: ./GatewayService
+        run: npm install
+      - name: Run Gateway Tests
+        working-directory: ./GatewayService
+        run: npm test
