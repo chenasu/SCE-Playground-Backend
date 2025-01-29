@@ -1,8 +1,7 @@
 import express from "express";
 import axios from "axios";
 import cors from "cors";
-import cookieParser from "cookie-parser"; 
-
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = 3000;
@@ -12,15 +11,17 @@ const AUTH_SERVICE_URL = "http://localhost:3002";
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: "http://localhost:5173", 
-  credentials: true, 
-}));
- 
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    credentials: true,
+  })
+);
+
 app.post("/signup", async (req, res) => {
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/signup`, req.body);
-    console.log(response.status)
+    console.log(response.status);
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error("Error during signup:", error);
@@ -29,22 +30,22 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log('got login request')
+  console.log("got login request");
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/login`, req.body);
-    console.log(response.status)
-     // קבלת ה-JWT מ-Auth Service
-     const { token } = response.data;
-     if (!token) {
+    console.log(response.status);
+    // קבלת ה-JWT מ-Auth Service
+    const { token } = response.data;
+    if (!token) {
       return res.status(401).json({ message: "Authentication failed" });
     }
-     
-     res.cookie("authToken", token, {
-       httpOnly: true,
-       secure: false,
-       sameSite: "strict",
-       maxAge: 30 * 24 * 60 * 60 * 1000, 
-     });
+
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error("Error during login:", error);
