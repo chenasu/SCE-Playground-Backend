@@ -34,7 +34,6 @@ app.post("/login", async (req, res) => {
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/login`, req.body);
     console.log(response.status);
-    // קבלת ה-JWT מ-Auth Service
     const { token } = response.data;
     if (!token) {
       return res.status(401).json({ message: "Authentication failed" });
