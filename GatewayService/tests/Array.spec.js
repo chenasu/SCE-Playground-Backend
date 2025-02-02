@@ -2,7 +2,6 @@ import { expect } from "chai";
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import supertest from "supertest";
-import App from './App';
 
 describe("API Gateway Signup", () => {
   describe("Test signup flow", () => {
