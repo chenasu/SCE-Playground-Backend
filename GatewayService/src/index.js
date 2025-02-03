@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["http://localhost:5173"],
     credentials: true,
   })
 );
@@ -24,8 +24,18 @@ app.post("/signup", async (req, res) => {
     console.log(response.status);
     res.status(response.status).json(response.data);
   } catch (error) {
-    console.error("Error during signup:", error);
-    res.status(500).json({ message: "Error during signup process" });
+    if (error.response) {
+      console.error("Error from auth service:", error.response.data.message);
+      res.status(error.response.status).json({
+        message: error.response.data.message || "Error during signup process",
+      });
+    } else if (error.request) {
+      console.error("No response received from auth service:", error.request);
+      res.status(502).json({ message: "Bad Gateway: No response from service" });
+    } else {
+      console.error("General error:", error.message);
+      res.status(500).json({ message: "Error during signup process" });
+    }
   }
 });
 
@@ -47,11 +57,20 @@ app.post("/login", async (req, res) => {
     });
     res.status(response.status).json(response.data);
   } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ message: "Error during login process" });
+    if (error.response) {
+      console.error("Error from auth service:", error.response.data.message);
+      res.status(error.response.status).json({
+        message: error.response.data.message || "Error during login process",
+      });
+    } else if (error.request) {
+      console.error("No response received from auth service:", error.request);
+      res.status(502).json({ message: "Bad Gateway: No response from service" });
+    } else {
+      console.error("Error during login:", error.message);
+      res.status(500).json({ message: "Error during login process" });
+    }
   }
 });
-
 // app.post("/example", async (req, res) => {
 //   console.log('got login request')
 //   try {
@@ -67,3 +86,5 @@ app.post("/login", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`API Gateway is running on http://localhost:${PORT}`);
 });
+
+export { app };

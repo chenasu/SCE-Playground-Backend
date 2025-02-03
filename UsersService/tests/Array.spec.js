@@ -1,34 +1,49 @@
+import request from 'supertest';
+import { app as apiGatewayApp } from '../../GatewayService/src/index.js'; 
 import { expect } from "chai";
-import supertest from "supertest";
 
-describe("User Service Signup", () => {
-  describe("Test user registration", () => {
-    it("Should register new user successfully", async () => {
-      const response = await supertest(app)
-        .post("/signup")
-        .send({
-          username: "newUser",
-          fullname: "New User",
-          password: "password123",
-          email: "newuser@example.com",
-        })
-        .expect(201);
+describe('Integration tests for API Gateway and Auth Service', () => {
+  it('should sign up a new user through API Gateway and Auth Service', async () => {
+    const newUser = {
+      fullname: "Test User",
+      username: "testuser",
+      password: "password123",
+      email: "testuser@example.com",
+    };
 
-      expect(response.body.message).to.equal("User registered successfully");
-    });
+    const signupResponse = await request(apiGatewayApp)
+      .post('/signup')
+      .send(newUser)
+      .expect(400); 
 
-    it("Should return error if user already exists", async () => {
-      const response = await supertest(app)
-        .post("/signup")
-        .send({
-          username: "existingUser",
-          fullname: "Existing User",
-          password: "password123",
-          email: "existinguser@example.com",
-        })
-        .expect(400);
+    expect(signupResponse.body.message).to.be.eql("User already exists");
+  });
 
-      expect(response.body.message).to.equal("User already exists");
-    });
+  it('should log in a user and receive a token through API Gateway and Auth Service', async () => {
+    const credentials = {
+      username: 'testuser',
+      password: 'password123',
+    };
+
+    const loginResponse = await request(apiGatewayApp)
+      .post('/login')
+      .send(credentials)
+      .expect(200);
+
+    expect(loginResponse.body.message).to.be.eql("Login successful");
+  });
+
+  it('should reject invalid login attempt through API Gateway and Auth Service', async () => {
+    const invalidCredentials = {
+      username: 'wronguser',
+      password: 'wrongpassword',
+    };
+
+    const loginResponse = await request(apiGatewayApp)
+      .post('/login')
+      .send(invalidCredentials)
+      .expect(401);  
+
+    expect(loginResponse.body.message).to.be.eql("Invalid username or password");
   });
 });
