@@ -25,4 +25,3 @@ jobs:
         run: npm test
       - name: Run Linter
         run: npm run lint
-        
