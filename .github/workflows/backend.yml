@@ -19,7 +19,8 @@ jobs:
         run: npm install
       - name: Start GatewayService and UsersService
         working-directory: ./UsersService/src
-        run: node index.js
+        run: |
+          nohup node index.js &
       - name: Run Service Tests
         working-directory: ./UsersService
         run: npm test
