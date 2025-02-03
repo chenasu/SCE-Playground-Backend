@@ -1,10 +1,14 @@
 name: CI/CD Pipeline
 
-on: push
+on: 
+  push:
+    branches:
+      - main  # תוכל להגדיר את ה-branch שבו זה יקרה, למשל main
 
 jobs:
   CICD:
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -19,10 +23,11 @@ jobs:
         run: npm install
       - name: Start GatewayService and UsersService
         working-directory: ./UsersService/src
-        run: |
-          nohup node index.js &
+        run: node index.js &
       - name: Run Service Tests
         working-directory: ./UsersService
         run: npm test
+        continue-on-error: false 
       - name: Run Linter
         run: npm run lint
+        continue-on-error: false 
