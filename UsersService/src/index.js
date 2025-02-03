@@ -28,28 +28,38 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
-  const { fullname,username, password, email } = req.body;
+  const { username, fullname, password, email } = req.body;
   try {
-    console.log("Checking if user exists:", username);
     const result = await client.query(
       "SELECT * FROM users WHERE username = $1",
       [username]
-      
     );
     if (result.rows.length > 0) {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    // הכנסת המשתמש למסד הנתונים
     await client.query(
-      "INSERT INTO users (fullname, username, password, email) VALUES ($1, $2, $3, $4)",
-      [fullname,username, password, email]
+      "INSERT INTO users (username, fullname, password, email) VALUES ($1, $2, $3, $4)",
+      [username, fullname, password, email]
     );
-    res.status(201).json({ message: "User registered successfully" });
+
+
+    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "30d" });
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: false, 
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000, 
+    });
+
+    res.status(201).json({ message: "User registered successfully", token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error during registration" });
   }
 });
+
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
